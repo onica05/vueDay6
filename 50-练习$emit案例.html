@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>练习$emit案例</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <!--
+        触发事件
+        第一个参数是：自定义事件名称；第二个参数是：自定义事件的id
+        eventHub.$emit('add-todo', id)
+     -->
+    <!-- 案例需求：有两个按钮，分别点击 使上面的数字+1，但是不互相影响，按钮上显示点击的次数 -->
+    <!-- 解决办法：利用 eventHub.$emit('add-todo', id)，
+        还有子传父数据交互
+        语法结构<button v-on:click="$emit('enlarge-text')">扩大文字</button>
+        父组件需要监听子组件的事件
+        语法结构：<menu-item v-on:enlarge-text='fontSize += 0.1'></menu-item>-->
+
+    <div id="app">
+        <div >{{total}}</div>
+        <one v-on:total-handle='totalHandle'></one>
+        <two v-on:total-handle='totalHandle'></two>
+
+    </div>
+
+
+    <!-- 引入vue.js库文件 -->
+    <script type="text/javascript" src="../JS/vue.js"></script>
+    <script type="text/javascript">
+        Vue.component('one', {
+            data: function () {
+                return {
+                    numOne: 0,
+                }
+            },
+            template: `
+            <div>
+                <div>
+                <button v-on:click="handle"  >点击了:{{numOne}}</button>
+
+                </div>
+            </div>
+            `,
+            methods: {
+                handle: function () {
+                    this.numOne++;
+                    // 要用this. 而不是hub.
+                    this.$emit('total-handle')
+                    // 触发 监听的父组件的事件 -> totalHandle
+                }
+            },
+
+        }),
+            Vue.component('two', {
+                data: function () {
+                    return {
+                        numTwo: 0
+                    }
+                },
+                template: `
+            <div>
+                <div>
+                <button v-on:click="handle">点击了:{{numTwo}}</button>
+                </div>
+            </div>
+            `,
+                methods: {
+                    handle: function () {
+                        this.numTwo++;
+                        // 触发 监听的父组件的事件 -> totalHandle
+                        this.$emit('total-handle');
+
+                    }
+                },
+            })
+
+
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                total: 0,
+            },
+            methods: {
+                totalHandle: function () {
+                    console.log(1111111111);
+                    this.total++;
+                }
+            },
+        });
+
+    </script>
+</body>
+
+</html>

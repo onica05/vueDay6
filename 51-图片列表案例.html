@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片列表案例</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        ul {
+            list-style: none;
+            border: 1px solid red;
+        }
+
+        li {
+            position: relative;
+            border: 1px solid red;
+            width: 350px;
+            height: 500px;
+            padding: 10px;
+            margin-right: 30px;
+            display: inline-block;
+        }
+
+        li img {
+            width: 100%;
+            height: 280px;
+        }
+
+        li .title {
+            font-size: 20px;
+        }
+
+        li .desc {
+            color: gray;
+        }
+
+        li .category {
+            display: inline-block;
+            text-align: center;
+            width: 77px;
+            height: 36px;
+            line-height: 33px;
+            border-radius: 29px;
+            background-color: rgb(205, 198, 198);
+            color: rgb(136, 132, 132);
+        }
+
+        li .people {
+            position: absolute;
+            bottom: 0px;
+            color: gray;
+
+        }
+        .active{
+            background-color: palegreen;
+            box-shadow:2px 2px 5px 3px rgb(136, 132, 132);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 案例需求：利用v-for 循环，将data的lists【里面包括 id\img\title\desc\leibie\people】显示在模板tempalte中，鼠标hover，添加box-shadow -->
+    <!-- 解决办法：
+        尝试将组件写在var vm = new Vue内，而不是全局组件
+    -->
+
+    <div id="app">
+        <!-- <ul>
+            <li v-for="item in lists" v-cloak>
+               <img :src="item.path" alt="" class="pics">
+               <p class="title">{{item.title}}</p>
+               <p class="desc">{{item.desc}}</p>
+               <span class="category">{{item.category1}}</span>
+               <span class="category">{{item.category2}}</span>
+               <p class="people">{{item.people}}</p>
+
+            </li>
+        </ul> -->
+        <content-list :lists='lists' ></content-list>
+
+    </div>
+
+
+    <!-- 引入vue.js库文件 -->
+    <script type="text/javascript" src="../JS/vue.js"></script>
+    <script type="text/javascript">
+
+        //    父组件向子组件传值
+        Vue.component('content-list', {
+            data:function(){
+                return {
+                    isActive:false,
+                }
+            },
+            props:['lists'],
+            template: `
+            <ul>
+              <li :key="item.id" v-for="item in lists" v-cloak   v-on:mouseover="mouseover(item.id)" v-on:mouseout="mouseout(item.id)"v-bind:class="{active:item.id == isActive}">
+               <img :src="item.path" alt="" class="pics">
+               <p class="title">{{item.title}}</p>
+               <p class="desc">{{item.desc}}</p>
+               <span class="category">{{item.category1}}</span>
+               <span class="category">{{item.category2}}</span>
+               <p class="people">{{item.people}}</p>
+              </li>
+            </ul>
+            `,
+            methods:{
+                mouseover:function(id){
+                    console.log(id);
+                    this.isActive = id;
+                },
+                mouseout:function(id){
+                    this.isActive = false;
+                },
+            }
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                num: 10,
+                lists: [{
+                    id: 1,
+                    path: 'IMGS/bg.jpg',
+                    title: 'HTML/CSS',
+                    desc: '博学谷a',
+                    category1: 'HTML',
+                    category2: '网页制作',
+                    people: '1000人学习'
+
+                }, {
+                    id: 2,
+                    path: 'IMGS/bg.jpg',
+                    title: 'HTML/CSS',
+                    desc: '博学谷b',
+                    category1: 'HTML',
+                    category2: '网页制作',
+                    people: '2000人学习'
+
+                }, {
+                    id: 3,
+                    path: 'IMGS/bg.jpg',
+                    title: 'HTML/CSS',
+                    desc: '博学谷c',
+                    category1: 'HTML',
+                    category2: '网页制作',
+                    people: '3000人学习'
+
+                }],
+                objStyles:{
+                    border:'2px solid green',
+                    width:'200px',
+                    height:'50px',
+                },
+                
+
+            },
+
+          
+        });
+
+    </script>
+</body>
+
+</html>

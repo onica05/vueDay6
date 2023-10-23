@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作用域插槽</title>
+    <style>
+        .current {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 作用域插槽：场景：父组件对子组件的内容，进行加工处理；我觉得还是跟之前函数作用域异曲同工，级别高的可以对级别低的内容进行修改，级别低的就不能对级别高的修改
+        例如： 使某个子组件的li高亮显示
+        语法结构：
+        <ul>
+            <li v-for="item in list" v-bind:key="item.id">
+                <slot v-bind:item= "item">  v-bind:item这个item名称使自定义的
+                    {{item. name}}
+                </slot>
+            </li>
+        </ul>
+        插槽内容:
+        <fruit-list :list="list">
+            <template slot-scope="slotProps">  slot-scope这个属性可以得到子组件绑定的属性，也就是这个属性<slot v-bind:item= "item">
+                <strong v-if="slotProps.item.current">
+                    {{slotProps.item.text}}
+                </strong>
+            </template>
+        </fruit-list>
+       
+     -->
+
+    <div id="app">
+        <div>父组件</div>
+        <!-- 通过属性绑定的方式，绑定data的list内容 -->
+        <fruit-list :list="list">
+
+            <!-- 这一部分就决定了子组件显示成什么样子 -->
+            <!-- slot-scope这个属性可以得到子组件绑定的属性，也就是这个属性<slot v-bind:info= "item"> -->
+            <template slot-scope="slotProps">
+                <!-- slotProps.info.id == 2 这句就表示让id==2的li高亮显示，要是想让其他也高亮直接修改id值 -->
+                <strong v-if="slotProps.info.id == 2" class="current">
+                    {{slotProps.info.name}}
+                </strong>
+                <span v-else> {{slotProps.info.name}}</span>
+            </template>
+
+        </fruit-list>
+    </div>
+
+
+    <!-- 引入vue.js库文件 -->
+    <script type="text/javascript" src="../JS/vue.js"></script>
+    <script type="text/javascript">
+        Vue.component('fruit-list', {
+            props:['list'],
+            template:`
+                <div>
+                   <li :key='item.id' v-for='item in list'> 
+
+                       <slot v-bind:info= "item">
+                           {{item.name}}
+                       </slot>
+
+                   </li>
+                </div>
+            `,
+           
+        });
+
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                pmsg: '我是父组件的内容',
+                list:[{
+                    id:1,
+                    name:'apple'
+                },
+                {
+                    id:2,
+                    name:'orange'
+                },
+                {
+                    id:3,
+                    name:'banana'
+                },]
+
+            },
+
+        });
+
+    </script>
+</body>
+
+</html>
